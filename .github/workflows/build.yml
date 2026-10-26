@@ -20,19 +20,15 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.11'
 
-    - name: Install West
-      run: |
-        pip3 install west
-        west init -m . --mr main || true
-        west update
+    - name: Setup Zephyr Project and Toolchain
+      uses: zephyrproject-rtos/action-zephyr-setup@v1
+      with:
+        app-path: .
+        toolchains: arm-zephyr-eabi
 
-    - name: Initialize Zephyr toolchain
-      run: |
-        pip3 install cmake ninja
-
-    - name: Build Firmware
+    - name: Build Firmware via West
       run: |
         west build -b promicro_nrf52840 -- -DCONF_FILE=prj.conf
 
