@@ -31,13 +31,12 @@ jobs:
         app-path: .
         toolchains: arm-zephyr-eabi
 
-    - name: Link Dependencies and Build Firmware
+    - name: Link ANT Module and Build Firmware
       run: |
-        # 1. 显式声明当前的 ZEPHYR_BASE 路径，将外置的扩展依赖包导入变量
-        export ZEPHYR_BASE=$GITHUB_WORKSPACE/zephyr
+        # 1. 强制将当前工作区下的外部多源目录显式注册给 west 拓扑结构
+        west config manifest.path .
         
-        # 2. 调用 west 进行全路径包含的编译，允许未被内核完全识别的高级符号注入
-        # 并在构建时允许 Kconfig 警告通过，以便原作者的 ANT 驱动能顺利合入
+        # 2. 绕过 Kconfig 严格模式拦截，同时不干扰顶层全局环境变量
         export KCONFIG_WARN_AS_ERROR=0
         west build -b promicro_nrf52840 -- -DCONF_FILE=prj.conf -DKCONFIG_WARN_AS_ERROR=0
 
