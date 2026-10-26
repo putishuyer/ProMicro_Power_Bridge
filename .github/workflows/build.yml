@@ -22,6 +22,9 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Install Compatible CMake 3.29.3
+      uses: lukka/get-cmake@v3.29.3
+
     - name: Setup Zephyr Project and Toolchain
       uses: zephyrproject-rtos/action-zephyr-setup@v1
       with:
